@@ -13,7 +13,7 @@ def index():
     if request.method == 'POST':
         file = request.files['file']
         if file.filename == '':
-            return "❌ No file selected."
+            return " No file selected."
 
         
         mp3_path = os.path.join(UPLOAD_FOLDER, 'my_audio.mp3')
@@ -26,21 +26,21 @@ def index():
         try:
            
             audio = AudioSegment.from_mp3(mp3_path)
-            audio = audio.set_channels(1).set_frame_rate(16000)  # Better for Google
+            audio = audio.set_channels(1).set_frame_rate(16000)  
             audio.export(wav_path, format='wav')
 
             
             recognizer = sr.Recognizer()
             with sr.AudioFile(wav_path) as source:
-                recognizer.adjust_for_ambient_noise(source)  # Optional: reduce noise
+                recognizer.adjust_for_ambient_noise(source)  
                 audio_data = recognizer.record(source)
 
             try:
                 text = recognizer.recognize_google(audio_data)
             except sr.UnknownValueError:
-                text = " Audio samajh nahi aayi."
+                text = "not clear ."
             except sr.RequestError as e:
-                text = f" Google se response nahi mila: {e}"
+                text = f" no response: {e}"
 
          
             doc = Document()
